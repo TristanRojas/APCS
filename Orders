@@ -1,0 +1,189 @@
+
+public class Controller {
+	private MasterOrder order;
+	
+	
+	public Controller() {
+		order = new MasterOrder();
+	}
+	//3 options to choose from, with a maximum of 0-9 quantity of the food you want to choose from. If they enter display, total, myorder, or removeproduct, then the code is executed for them respectively
+	public void run() {
+			boolean on = true;
+			while(on) {
+				try {
+					String b = JOP.in("What's your name, kid?");
+					JOP.msg("Welcome to Rico's food truck, we have:\n*Hotdog,\n*Burger, and\n*Pizza.");
+					String p = JOP.in("What do you want?\n*Enter display to see your order.\n*Enter total to view your total amount of products.\n*Enter myorder to view orders.\n*Enter removeproduct to remove all orders by product.\n*Enter removebuyer to remove all orders by the buyer.\n*Enter remove to remove all orders by the product and the buyer.\n*FINALLY, enter exit to exit the program.");
+					if(p.equalsIgnoreCase("exit")) {on = false;}
+					else {
+						String a = JOP.in("And how many do you want? Enter 0-9");
+						if(a.contains("0") || a.contains("1") || a.contains("2") || 
+				                a.contains("3") || a.contains("4") || a.contains("5") || 
+				                a.contains("6") || a.contains("7") || a.contains("8") || 
+				                a.contains("9")){
+							int amount = Integer.parseInt(a);
+							if(p.equalsIgnoreCase("hotdog")) {
+								Order o = new Order(p, b, amount);
+								order.addOrder(o);
+							}
+							else if(p.equalsIgnoreCase("burger")) {
+								Order o = new Order(p, b, amount);
+								order.addOrder(o);
+							}
+							else if(p.equalsIgnoreCase("pizza")) {
+								Order o = new Order(p, b, amount);
+								order.addOrder(o);
+							}
+							else if(p.equalsIgnoreCase("display")) {order.printOrders();}
+							else if(p.equalsIgnoreCase("total")) {order.totalProducts();}
+							else if(p.equalsIgnoreCase("myorder")) {order.printOrders(b);}
+							else if(p.equalsIgnoreCase("removeproduct")) {
+								String p1 = JOP.in("What product do you want to remove?");
+								order.clearProduct(p1);
+							}
+							else if(p.equalsIgnoreCase("removebuyer")) {
+								String p2 = JOP.in("What buyer do you want to remove?");
+								order.clearBuyer(p2);
+							}
+							else if(p.equalsIgnoreCase("remove")) {order.remove(p, b);}
+							
+							
+							else {JOP.msg("You had ONE job. Select one item from the menu. ONE item. Try again.");}
+						
+						}
+						else {JOP.msg("You had ONE job. To tell me how much of the item you want from the menu. Try again.");}
+					}
+				}
+				catch(NullPointerException e) {}
+		}
+		
+	}
+
+}
+
+import java.awt.Component;
+import javax.swing.JOptionPane;
+public class JOP {
+    public JOP() {
+    }
+
+    public static void msg(String msg) {
+        JOptionPane.showMessageDialog((Component)null, msg);
+    }
+
+    public static String in(String msg) {
+        return JOptionPane.showInputDialog(msg);
+    }
+}
+
+
+public class Main {
+
+	public static void main(String[] args) {
+		Controller obj = new Controller();
+		obj.run();
+	}
+
+}
+	
+ import java.util.ArrayList;
+
+public class MasterOrder {
+    private ArrayList<Order> orders;
+    
+    public MasterOrder() {
+        orders = new ArrayList<Order>();
+    }
+    
+    public void addOrder(Order o) {
+        orders.add(o);
+    }
+    
+    //creates an orderStr String which adds all the order from the arraylist containing the orders, seperated by a |. Then prints it on a JOP msg
+    public void printOrders() {
+        String orderStr = "";
+        for(Order o : orders) {
+            orderStr += o;
+            orderStr += " | ";
+        }
+        JOP.msg(orderStr);
+    }
+    //same thing as print orders but with buyer String as parameter
+    public void printOrders(String buyer) {
+        String orderStr = "";
+        for(Order o : orders) {
+            if(o.getBuyer().equalsIgnoreCase(buyer)) {
+                //Change this to whatever your controller/view is
+                orderStr += o;
+                orderStr += " | ";
+            }
+        }
+        JOP.msg(orderStr);
+    }
+    //loops through the orders arraylist and checks if each index is equal to the string Product. if it is, remove it.
+    public void clearProduct(String product) {
+        for(int i = 0; i < orders.size(); i++) {
+            if(orders.get(i).getProduct().equalsIgnoreCase(product)) {
+                orders.remove(i);
+                i--;
+            }
+        }
+    }
+    //loops through the orders arraylist and checks if each index is equal to the string buyer. if it is, remove it.
+    public void clearBuyer(String buyer) {
+        for(int i = 0; i < orders.size(); i++) {
+            if(orders.get(i).getBuyer().equalsIgnoreCase(buyer)) {
+                orders.remove(i);
+                i--;
+            }
+        }
+    }
+    //same thing as the two methods above but with both of them at the same time being removed (narrows your search down to a specific buyer and product)
+    public void remove(String product, String buyer) {
+        for(int i = 0; i < orders.size(); i++) {
+            if(orders.get(i).getBuyer().equalsIgnoreCase(buyer) && orders.get(i).getProduct().equalsIgnoreCase(product)) {
+                orders.remove(i);
+            }
+        }
+    }
+    
+    //creates a sum int and adds the amount from all orders in the orders arraylist by looping through it.
+    public int totalProducts() {
+    	int sum = 0;
+    	for(int i = 0; i < orders.size(); i++) {
+    		sum += orders.get(i).getAmount();
+    	}
+    	return sum;	
+    }
+    
+}
+
+public class Order {
+    private String product;
+    private String buyer;
+    private int amount;
+    
+    //Order constructor using inputs to give values to variables
+    public Order(String p, String b, int a) {
+        product = p;
+        buyer = b;
+        amount = a;
+    }
+    
+    //getters and setters
+    public String getProduct() {return product;}
+    public String getBuyer() {return buyer;}
+    public int getAmount() {return amount;}
+    
+    public void setProduct(String p) {product = p;} 
+    public void setBuyer(String b) {buyer = b;}
+    public void setAmount(int a) {amount = a;}
+    
+    //returns a String of the entire order, with the amount of the product ordered and the product itself.
+    public String toString() {
+        if(amount > 0) {
+            return "Order of " + amount + " " + product;
+        }
+        return "Order of " + amount + " " + product;
+    }
+}

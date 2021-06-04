@@ -1,0 +1,157 @@
+package cont;
+
+import javax.swing.JOptionPane;
+
+public class JOP {
+
+    public static void msg(String msg) {
+        JOptionPane.showMessageDialog(null, msg);
+    }
+
+    public static String in(String msg){
+        return JOptionPane.showInputDialog(msg);
+    }
+}
+
+package mod;
+
+public class Main {
+
+    public static void main(String[] args) {
+        new World();
+    }
+
+}
+
+package mod;
+
+import java.util.ArrayList;
+
+import cont.JOP;
+//creating a line in standard form (Ax + By = C) the user inputs a b and c and the values are stored in an arraylist.
+public class World {
+
+	ArrayList<Integer> a = new ArrayList<Integer>();
+	ArrayList<Integer> b = new ArrayList<Integer>();
+	ArrayList<Integer> c = new ArrayList<Integer>();
+	
+	public boolean running = true;
+	int index = 0;
+	int seven = 0;
+	int x = 0;
+	int y = 0;
+	int balls = 0;
+	int hi = 0;
+	int daddy = 0;
+	double[] no;
+	
+	
+	/*
+    User inputs a, b and c to create the line
+    User also has the option of inputting the slope and y-intercept
+    User can see the slope of their line
+    User can see a, b and c
+    User can see if a point lies on their line.
+    User will be informed if the point lies above or below their line [Find y using the line for the user's x value and determine if it is greater or less than the expected y value]
+    User can change the original line
+    User can add another line (with either options) and see if they intersect, and if so at what point [System of equations]
+    */
+	public World()
+	{
+		while(running = true)
+		{
+			String response = JOP.in("To create a line type create\nTo exit, enter exit.\nTo check if a point is on a line, enter point\nEnter change to change a desired line\nTo check if two lines intersect, enter intersect");
+			
+			if(response.equalsIgnoreCase("exit"))
+			{
+				System.exit(0);
+			}
+			if(response.equalsIgnoreCase("create"))
+			{
+				String line = JOP.in("Standard or Slope Intercept form?\n (enter standard or slope)");
+				if(line.equalsIgnoreCase("standard"))
+				{
+					String valueA = JOP.in("Input value of A");
+					a.add(Integer.parseInt(valueA));
+					String valueb = JOP.in("Input value of B");
+					b.add(Integer.parseInt(valueb));
+					String valueC = JOP.in("Input value of C");
+					c.add(Integer.parseInt(valueC));
+					JOP.msg("Your equation is " + a.get(index) + "x + " + b.get(index) + "y + " + c.get(index) + " =0\nSlope of given line: " + -(a.get(index) / ((double) b.get(index))) + "\nA, B, C equals " + a.get(index) + ", " + b.get(index) + ", "+ c.get(index) + " respectively");
+					index++; 
+				}
+			}
+			if(response.equalsIgnoreCase("point"))
+			{
+				String check = JOP.in("Enter index desired line you want to check (first line = 1)");
+				String xVal = JOP.in("what's the x coordinate of the point you're checking?");
+                x = Integer.parseInt(xVal);
+                String yVal = JOP.in("what's the y coordinate of the point you're checking?");
+                y = Integer.parseInt(yVal);
+                if(a.get(seven)*x + b.get(seven)*y + c.get(seven) == 0){
+                	JOP.msg("this point is on the line.");
+                    }
+                    else if(a.get(seven)*x + b.get(seven)*y + c.get(seven) > 0){
+                        JOP.msg("this point is above the line.");
+                    }
+                    else{
+                        JOP.msg("this point is below the line.");
+                    }
+				}
+			
+			if(response.equalsIgnoreCase("change"))
+			{
+				String change = JOP.in("Enter line you want to change");
+				balls = Integer.parseInt(change) - 1;
+				String abc = JOP.in("Do you want to change a, b, or c?");
+				if(abc.equalsIgnoreCase("a"))
+				{
+					String value = JOP.in("Enter the value you want to change it to.");
+					a.set(balls, Integer.parseInt(value));
+				}
+				if(abc.equalsIgnoreCase("b"))
+				{
+					String value = JOP.in("Enter the value you want to change it to.");
+					b.set(balls, Integer.parseInt(value));
+				}
+				if(abc.equalsIgnoreCase("c"))
+				{
+					String value = JOP.in("Enter the value you want to change it to.");
+					c.set(balls, Integer.parseInt(value));
+				}	
+			}
+			if(response.equalsIgnoreCase("intersect"))
+			{
+				String check = JOP.in("Enter first line you want to check");
+				hi = Integer.parseInt(check) - 1;
+				String check2 = JOP.in("Enter second line you want to check");
+				daddy = Integer.parseInt(check2) - 1;
+				no = getIntersectionPoint(a.get(hi), b.get(hi), c.get(hi), a.get(daddy), b.get(daddy), c.get(daddy));
+				JOP.msg("Given lines cross at " + no[0] + ", " + no[1]);
+			}
+		}
+	}
+	
+  //method that calculates the intersection point of two lines
+	public double[] getIntersectionPoint(int a1, int b1, int c1, int a2, int b2, int c2)
+    {
+        double bb1 = (-1*c1)/((double) b1);
+        //THE B VALUE FOR Y=MX + B IN LINE 1
+        double bb2 = (-1*c2)/((double)b2);
+         //THE B VALUE FOR Y=MX + B IN LINE 2
+        double m1 = -(a1 / ((double) b1));
+          //THE M VALUE FOR Y=MX + B IN LINE 1
+        double m2 = -(a2 / ((double) b2));
+         //THE M VALUE FOR Y=MX + B IN LINE 2
+        double x = (bb2-bb1)/(m1-m2);
+        //X INTERSECTION POINT
+        double y = m1*(x) + bb1;
+        //Y INTERSECTION POINT
+        double [] temp = new double[2];
+        temp[0] = x;
+        temp[1] = y;
+        return temp;
+    }
+	
+	
+}

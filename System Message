@@ -1,0 +1,248 @@
+package cont;
+
+import javax.swing.JOptionPane;
+
+public class JOP {
+
+    public static void msg(String string) {
+        JOptionPane.showMessageDialog(null, string);
+    }
+
+    public static String in(String msg){
+        return JOptionPane.showInputDialog(msg);
+    }
+
+}
+
+package mod;
+
+import java.util.ArrayList;
+
+import cont.JOP;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Tracker obj = new Tracker();
+    }
+
+}
+
+package mod;
+
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
+import cont.JOP;
+
+//tracker class, contains arraylists of error IDs, messages, and temporary storage.
+public class Tracker {
+    private boolean running = true;
+    ArrayList<String> id = new ArrayList<String>();
+    ArrayList<String> message = new ArrayList<String>();
+    ArrayList<String> temp = new ArrayList<String>();
+    int cnt = 0;
+    int count = 0;
+    
+    
+    /*adds the corresonding ID's and messages to their respective arrays, to be displayed soon.
+      with the users input, they can:
+      Search for any and all messages containing a keyword.
+      Search messages by machineID.
+      Remove any and all messages containing a keyword.
+      Remove messages by machineID.
+      Add a message by asking for the machineID first then the description.
+      Generate a random description for a machineID that is chosen from the list of all currently available machineIDs and display to the user (this includes any machineIDs added by the user.)
+      Return a count of the number of descriptions for each machineID
+     */
+    public Tracker() {
+    	
+    	id.add("VisualBug");
+    	message.add(" neolithic era art");
+    	id.add("VisualBug");
+    	message.add(" visible tv static on screen ");
+    	id.add("VisualBug");
+    	message.add(" angry birds red bird ");
+    	id.add("CompileError");
+    	message.add(" couldn't resolve, sorry bro ");
+    	id.add("CompileError");
+    	message.add(" simply could not compile ");
+    	id.add("CompileError");
+    	message.add(" computer refused to submit to your orders ");
+    	id.add("CompileError");
+    	message.add(" your PC has overheated and needs some time alone. ");
+    	id.add("RunningMessage");
+    	message.add(" server has failed to run ");
+    	id.add("RunningMessage");
+    	message.add(" computer lacks in cardio and has tired itself out, being unable to run. ");
+    	id.add("RunningMessage");
+    	message.add(" your computer needs to run faster. HE is coming. ");
+    	
+        while(running) {
+        	
+
+        	
+        	String response = JOP.in("Welcome to the System Messaging Program.\n*Type and enter Exit to leave\n*Type and enter View if you want to view/search for messages or machine IDs\n*Type and enter Remove if you want to delete anything\n*Type and enter Add if you want to add your own MachineID and Description\n*Type and enter Count if you want to know how many descriptions there are for each MachineID");
+            
+        	if (response.equalsIgnoreCase("exit")) {
+    	    	System.exit(0);
+    	        }
+        	else if(response.equalsIgnoreCase("Add"))
+            {
+            	String key = JOP.in("Enter the MachineID for the message you want to add.");
+            	id.add(key);
+            	String kye = JOP.in("Enter the message that you want to add.\nYou can enter Random if you want to add a random message");
+            	if(kye.equalsIgnoreCase("random"))
+            	{
+            		int randomInt = (int) (Math.random() * ((message.size()-1) - 0 + 1) + 0);
+            		message.add(message.get(randomInt));
+            	}
+            	else
+            	{
+            		message.add(kye);
+            	}
+            	JOP.msg("New MachineID and message sucessfully added.");
+            }
+        	
+        	else if (response.equalsIgnoreCase("View")) {
+        		//String cation = "";
+                String answer = JOP.in("*Enter All to view all messages\n*Enter Keyword to search for messages using a keyword.\n*Enter ID to search by Machine ID.");
+                if(answer.equalsIgnoreCase("all"))
+                {
+                	for (int i = 0; i < id.size(); i++)
+                	{
+                		temp.add(id.get(i) + ":" + message.get(i));
+                	}
+                	for (int i = 0; i < temp.size(); i++)
+                	{
+                		JOP.msg(temp.get(i));
+                	}
+                	temp.clear();
+                }
+                else if(answer.equalsIgnoreCase("Keyword"))
+                {
+                	String key = JOP.in("Enter the keyword you wish to search for.\n***Case and spelling MUST be exact.***");
+                	
+                	for (int i = 0; i < message.size(); i++)
+                	{
+                		if(message.get(i).contains(" " + key + " "))
+                		{
+
+                			JOP.msg(id.get(i) + ":" + message.get(i));
+                			cnt++;
+                		}
+                    }
+
+                	if(cnt ==0)
+                	{
+                		JOP.msg("No messages found with desired keyword.");
+                		
+                	}
+                	cnt = 0;
+                	}
+                else if(answer.equalsIgnoreCase("ID"))
+                {
+                	String key = JOP.in("Enter desired MachineID you wish to search under.\nThe available MachineID's are:\n" + id + "\n***Case and spelling MUST be exact.***");
+                	
+                	for (int i = 0; i < id.size(); i++)
+                	{
+                		if(id.get(i).contains(key))
+                		{
+
+                			JOP.msg(id.get(i) + ":" + message.get(i));
+                			cnt++;
+                		}
+                    }
+
+                	if(cnt ==0)
+                	{
+                		JOP.msg("No MachineID's found under desired keyword.");
+                		
+                	}
+                	cnt = 0;
+                	}
+        		}
+        	else if (response.equalsIgnoreCase("remove")) {
+        		//String cation = "";
+                String answer = JOP.in("Enter Keyword to remove messages by specific keyword\nEnter ID to remove by Machine ID.");
+                if(answer.equalsIgnoreCase("Keyword"))
+                {
+                	String key = JOP.in("Enter the keyword you wish to remove messages with.\n***Case and spelling MUST be exact.***");
+                	
+                	for (int i =0; i < message.size(); i++)
+                	{
+                		if(message.get(i).contains(" " + key + " "))
+                		{
+
+                			message.remove(i);
+                			id.remove(i);
+                			cnt++;
+                			i--;
+                		}
+                    }
+
+                	if(cnt ==0)
+                	{
+                		JOP.msg("Unable to find any messages to remove -- keyword not contained in any of those messages.");
+                		
+                	}
+                	else
+                	{
+                		JOP.msg("Messages with that keyword have been sucessfully removed.");
+                	}
+                	cnt = 0;
+                	}
+                else if(answer.equalsIgnoreCase("ID"))
+                {
+                	String key = JOP.in("Enter the MachineID you want to remove,\nThe available MachineID's are:\n" + id + "\n***Case and spelling MUST be exact.***");
+                	
+                	
+                	
+                	for (int i = 0; i < id.size(); i++)
+                	{
+                		
+                		if(id.get(i).equals(key))
+                		{
+                			message.remove(i);
+                			id.remove(i);
+                			cnt++;
+                			i--;
+                		}
+                    }
+
+                	if(cnt ==0)
+                	{
+                		JOP.msg("No MachineID's found under that name");
+                		
+                	}
+                	else
+                	{
+                		JOP.msg("Messages with that machine ID have been sucessfully removed.");
+                	}
+                	cnt = 0;
+                	}
+                
+                
+        		}
+        	else if(response.equalsIgnoreCase("Count"))
+            {
+            	String key = JOP.in("Enter the desired the MachineID to find the number of descriptions it has!,\nThe available MachineID's are:\n" + id + "\n***Case and spelling MUST be exact.***");
+
+            	for (int i = 0; i < id.size(); i++)
+            	{
+            		if(id.get(i).contains(key))
+            		{
+
+            			cnt++;
+            		}
+                }
+
+            		JOP.msg("Selected MachineID has " + cnt + " descriptions.");
+            		cnt=0;
+            }
+            
+        }
+    }
+}
+
